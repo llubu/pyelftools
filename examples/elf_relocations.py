@@ -14,8 +14,6 @@ import sys
 # examples/ dir of the source distribution.
 sys.path[0:0] = ['.', '..']
 
-
-from elftools.common.py3compat import bytes2str
 from elftools.elf.elffile import ELFFile
 from elftools.elf.relocation import RelocationSection
 
@@ -27,15 +25,15 @@ def process_file(filename):
 
         # Read the .rela.dyn section from the file, by explicitly asking
         # ELFFile for this section
-        # Recall that section names are bytes objects
-        reladyn_name = b'.rela.dyn'
+        # The section names are strings
+        reladyn_name = '.rela.dyn'
         reladyn = elffile.get_section_by_name(reladyn_name)
 
         if not isinstance(reladyn, RelocationSection):
-            print('  The file has no %s section' % bytes2str(reladyn_name))
+            print('  The file has no %s section' % reladyn_name)
 
         print('  %s section with %s relocations' % (
-            bytes2str(reladyn_name), reladyn.num_relocations()))
+            reladyn_name, reladyn.num_relocations()))
 
         for reloc in reladyn.iter_relocations():
             print('    Relocation (%s)' % 'RELA' if reloc.is_RELA() else 'REL')
